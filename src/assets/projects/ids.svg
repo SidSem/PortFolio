@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="96" fill="#07131F"/>
+  <path d="M256 71L127 128V242C127 318 181 389 256 441C331 389 385 318 385 242V128L256 71Z" fill="url(#shield)"/>
+  <path d="M256 139L175 175V242C175 296 207 349 256 391C305 349 337 296 337 242V175L256 139Z" fill="#081A2D"/>
+  <path d="M256 173C230 173 210 193 210 219V230H234V219C234 207 243 198 256 198C269 198 278 207 278 219V230H302V219C302 193 282 173 256 173Z" fill="#78E7FF"/>
+  <path d="M187 252H325" stroke="#7AE6FF" stroke-width="18" stroke-linecap="round"/>
+  <path d="M202 280H312" stroke="#7AE6FF" stroke-width="18" stroke-linecap="round"/>
+  <path d="M220 308H296" stroke="#7AE6FF" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="168" cy="255" r="20" fill="#7AE6FF"/>
+  <circle cx="344" cy="255" r="20" fill="#7AE6FF"/>
+  <circle cx="256" cy="326" r="20" fill="#7AE6FF"/>
+  <path d="M188 255H232" stroke="#7AE6FF" stroke-width="12" stroke-linecap="round"/>
+  <path d="M280 255H324" stroke="#7AE6FF" stroke-width="12" stroke-linecap="round"/>
+  <path d="M256 306V276" stroke="#7AE6FF" stroke-width="12" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="shield" x1="127" y1="71" x2="385" y2="441" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5EF2FF"/>
+      <stop offset="1" stop-color="#2A70FF"/>
+    </linearGradient>
+  </defs>
+</svg>

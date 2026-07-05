@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="64" fill="#FFFFFF"/>
+  <circle cx="256" cy="220" r="120" fill="#1B4F9C"/>
+  <path d="M196 220C196 186.863 222.863 160 256 160C289.137 160 316 186.863 316 220C316 253.137 289.137 280 256 280C222.863 280 196 253.137 196 220Z" fill="#FFFFFF"/>
+  <path d="M256 120L286 170H226L256 120Z" fill="#F59E0B"/>
+  <path d="M256 320L226 370H286L256 320Z" fill="#F59E0B"/>
+  <rect x="156" y="360" width="200" height="56" rx="12" fill="#1B4F9C"/>
+  <text x="256" y="398" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="28" font-weight="700">JNV</text>
+</svg>
