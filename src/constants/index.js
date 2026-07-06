@@ -100,7 +100,7 @@ const educations = [
     degree: "B.Tech in Computer Science and Engineering",
     icon: gehu,
     iconBg: "#ffffff",
-    date: "2022 - Present",
+    date: "2022 - 2026",
     points: [
       "Focused on Software Development, Web Technologies, Data Structures, and Algorithms.",
       "Exploring modern development practices, interactive web experiences, and full stack technologies.",
