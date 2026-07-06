@@ -6,8 +6,11 @@ import CanvasLoader from "../Loader";
 
 useGLTF.preload("/desktop_pc/scene.gltf");
 
-const Computers = ({ isMobile }) => {
+const Computers = ({ isMobile, isTablet }) => {
   const computer = useGLTF("/desktop_pc/scene.gltf");
+
+  const scale = isMobile ? 0.5 : isTablet ? 0.65 : 0.75;
+  const position = isMobile ? [0, -2.1, -1.2] : isTablet ? [0, -2.5, -1.4] : [0, -3.25, -1.5];
 
   return (
     <mesh>
@@ -23,8 +26,8 @@ const Computers = ({ isMobile }) => {
       <pointLight intensity={1} />
       <primitive
         object={computer.scene}
-        scale={isMobile ? 0.7 : 0.75}
-        position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
+        scale={scale}
+        position={position}
         rotation={[-0.01, -0.2, -0.1]}
       />
     </mesh>
@@ -33,20 +36,29 @@ const Computers = ({ isMobile }) => {
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
+    const mobileQuery = window.matchMedia("(max-width: 639px)");
+    const tabletQuery = window.matchMedia("(min-width: 640px) and (max-width: 1024px)");
 
-    setIsMobile(mediaQuery.matches);
+    setIsMobile(mobileQuery.matches);
+    setIsTablet(tabletQuery.matches);
 
-    const handleMediaQueryChange = (event) => {
+    const handleMobileChange = (event) => {
       setIsMobile(event.matches);
     };
 
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
+    const handleTabletChange = (event) => {
+      setIsTablet(event.matches);
+    };
+
+    mobileQuery.addEventListener("change", handleMobileChange);
+    tabletQuery.addEventListener("change", handleTabletChange);
 
     return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+      mobileQuery.removeEventListener("change", handleMobileChange);
+      tabletQuery.removeEventListener("change", handleTabletChange);
     };
   }, []);
 
@@ -57,7 +69,7 @@ const ComputersCanvas = () => {
       dpr={[1, 2]}
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
-      className='!absolute !m-auto top-0 xs:top-[-1px] bottom-0 right-0 xs:right-[-20px] sm:right-10 w-full h-full xs:h-[550px] md:h-[650px] lg:h-[750px] xl:h-[850px] z-[1]'
+      className='!absolute inset-x-0 bottom-10 mx-auto w-full h-[320px] sm:h-full z-[1]'
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
@@ -66,7 +78,7 @@ const ComputersCanvas = () => {
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
         />
-        <Computers isMobile={isMobile} />
+        <Computers isMobile={isMobile} isTablet={isTablet} />
       </Suspense>
 
       <Preload all />

@@ -7,14 +7,14 @@ const Hero = () => {
   return (
     <section className={`relative w-full h-screen mx-auto overflow-hidden`}>
       <div
-        className={`absolute inset-0 top-[120px] max-w-7xl mx-auto ${styles.paddingX} flex flex-row items-start gap-5 z-20 pointer-events-none`}
+        className={`absolute inset-0 top-[80px] sm:top-[120px] max-w-7xl mx-auto ${styles.paddingX} flex flex-col sm:flex-row items-center sm:items-start gap-5 z-20 pointer-events-none`}
       >
-        <div className='flex flex-col justify-center items-center mt-5'>
+        <div className='flex-col justify-center items-center mt-5 hidden sm:flex'>
           <div className='w-5 h-5 rounded-full bg-[#915EFF]' />
           <div className='w-1 sm:h-80 h-40 violet-gradient' />
         </div>
 
-        <div className='pointer-events-auto'>
+        <div className='pointer-events-auto flex flex-col items-center sm:items-start text-center sm:text-left'>
           <motion.p
             initial={{ opacity: 0, y: -24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -29,10 +29,10 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
           >
-            <h1 className={`${styles.heroHeadText} text-white`}>
+            <h1 className='font-black text-white text-[32px] xs:text-[40px] sm:text-[56px] md:text-[72px] lg:text-[80px] leading-[1.2] lg:leading-[98px] mt-2'>
               Hi, I'm <span className='text-[#915EFF]'>Siddharth Semwal</span>
             </h1>
-            <p className={`${styles.heroSubText} mt-2 text-white-100`}>
+            <p className='text-[#dfd9ff] font-medium text-[15px] xs:text-[16px] sm:text-[20px] md:text-[24px] lg:text-[30px] leading-[1.4] lg:leading-[40px] mt-2 text-white-100'>
               B.Tech CSE Student | Aspiring Software Developer{" "}
               <br className='sm:block hidden' />
               based in Uttarakhand, India

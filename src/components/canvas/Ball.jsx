@@ -12,7 +12,10 @@ import * as THREE from "three";
 import CanvasLoader from "../Loader";
 
 const TEXTURE_SIZE = 512;
-const isSvgAsset = (url) => typeof url === "string" && url.endsWith(".svg");
+const isSvgAsset = (url) => {
+  if (typeof url !== "string") return false;
+  return url.split("?")[0].endsWith(".svg") || url.startsWith("data:image/svg+xml");
+};
 
 const useSvgTexture = (imgUrl) => {
   const [texture, setTexture] = useState(null);
@@ -36,10 +39,13 @@ const useSvgTexture = (imgUrl) => {
 
       ctx.clearRect(0, 0, TEXTURE_SIZE, TEXTURE_SIZE);
 
+      const imgWidth = image.naturalWidth || image.width || 128;
+      const imgHeight = image.naturalHeight || image.height || 128;
+
       const scale =
-        Math.min(TEXTURE_SIZE / image.width, TEXTURE_SIZE / image.height) * 0.85;
-      const width = image.width * scale;
-      const height = image.height * scale;
+        Math.min(TEXTURE_SIZE / imgWidth, TEXTURE_SIZE / imgHeight) * 0.85;
+      const width = imgWidth * scale;
+      const height = imgHeight * scale;
       const x = (TEXTURE_SIZE - width) / 2;
       const y = (TEXTURE_SIZE - height) / 2;
 
@@ -94,7 +100,7 @@ const BallMesh = ({ decal }) => (
       <Decal
         position={[0, 0, 1]}
         rotation={[2 * Math.PI, 0, 6.25]}
-        scale={0.85}
+        scale={[0.85, 0.85, 0.85]}
         map={decal}
         flatShading
       />

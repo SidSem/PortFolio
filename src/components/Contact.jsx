@@ -73,9 +73,11 @@ const Contact = () => {
         serviceId,
         templateId,
         {
-          from_name: form.name.trim(),
-          from_email: form.email.trim(),
-          message: form.message.trim(),
+          from_name: form.name,
+          from_email: form.email,
+          message: form.message,
+          name: form.name,
+          email: form.email,
         },
         publicKey
       );
@@ -92,9 +94,10 @@ const Contact = () => {
       });
     } catch (error) {
       console.error("EmailJS error:", error);
+      const errorMessage = error?.text || "Failed to send message. Please try again.";
       setStatus({
         type: "error",
-        message: "Failed to send message. Please try again.",
+        message: `Failed to send message: ${errorMessage}`,
       });
     } finally {
       setLoading(false);
