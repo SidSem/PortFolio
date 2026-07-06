@@ -71,25 +71,25 @@ const useSvgTexture = (imgUrl) => {
   return texture;
 };
 
-const SvgBall = ({ imgUrl }) => {
+const SvgBall = ({ imgUrl, isMobile }) => {
   const decal = useSvgTexture(imgUrl);
 
   if (!decal) return <CanvasLoader />;
 
-  return <BallMesh decal={decal} />;
+  return <BallMesh decal={decal} isMobile={isMobile} />;
 };
 
-const RasterBall = ({ imgUrl }) => {
+const RasterBall = ({ imgUrl, isMobile }) => {
   const [decal] = useTexture([imgUrl]);
 
-  return <BallMesh decal={decal} />;
+  return <BallMesh decal={decal} isMobile={isMobile} />;
 };
 
-const BallMesh = ({ decal }) => (
+const BallMesh = ({ decal, isMobile }) => (
   <Float speed={1.75} rotationIntensity={1} floatIntensity={2}>
     <ambientLight intensity={0.25} />
     <directionalLight position={[0, 0, 0.05]} />
-    <mesh castShadow receiveShadow scale={2.75}>
+    <mesh castShadow={!isMobile} receiveShadow={!isMobile} scale={2.75}>
       <icosahedronGeometry args={[1, 1]} />
       <meshStandardMaterial
         color='#fff8eb'
@@ -108,23 +108,33 @@ const BallMesh = ({ decal }) => (
   </Float>
 );
 
-const Ball = ({ imgUrl }) =>
+const Ball = ({ imgUrl, isMobile }) =>
   isSvgAsset(imgUrl) ? (
-    <SvgBall imgUrl={imgUrl} />
+    <SvgBall imgUrl={imgUrl} isMobile={isMobile} />
   ) : (
-    <RasterBall imgUrl={imgUrl} />
+    <RasterBall imgUrl={imgUrl} isMobile={isMobile} />
   );
 
 const BallCanvas = ({ icon }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 639px)");
+    setIsMobile(mediaQuery.matches);
+    const handleChange = (e) => setIsMobile(e.matches);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
   return (
     <Canvas
-      frameloop='demand'
-      dpr={[1, 2]}
-      gl={{ preserveDrawingBuffer: true }}
+      frameloop='always'
+      dpr={[1, 1.5]}
+      gl={{ preserveDrawingBuffer: true, antialias: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} />
-        <Ball imgUrl={icon} />
+        <OrbitControls enableZoom={false} enableDamping={!isMobile} />
+        <Ball imgUrl={icon} isMobile={isMobile} />
       </Suspense>
 
       <Preload all />

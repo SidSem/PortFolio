@@ -20,8 +20,8 @@ const Computers = ({ isMobile, isTablet }) => {
         angle={0.12}
         penumbra={1}
         intensity={1}
-        castShadow
-        shadow-mapSize={1024}
+        castShadow={!isMobile}
+        shadow-mapSize={isMobile ? 256 : 1024}
       />
       <pointLight intensity={1} />
       <primitive
@@ -64,9 +64,9 @@ const ComputersCanvas = () => {
 
   return (
     <Canvas
-      frameloop='demand'
-      shadows
-      dpr={[1, 2]}
+      frameloop='always'
+      shadows={!isMobile}
+      dpr={[1, 1.5]}
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
       className='!absolute inset-x-0 bottom-10 mx-auto w-full h-[320px] sm:h-full z-[1]'
@@ -77,6 +77,7 @@ const ComputersCanvas = () => {
           enablePan={false}
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
+          enableDamping={!isMobile}
         />
         <Computers isMobile={isMobile} isTablet={isTablet} />
       </Suspense>
