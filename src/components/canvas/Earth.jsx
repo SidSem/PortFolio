@@ -12,12 +12,16 @@ const Earth = () => {
   );
 };
 
+const matchesMobile = () =>
+  typeof window !== "undefined" &&
+  typeof window.matchMedia === "function" &&
+  window.matchMedia("(max-width: 639px)").matches;
+
 const EarthCanvas = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(matchesMobile);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 639px)");
-    setIsMobile(mediaQuery.matches);
     const handleChange = (e) => setIsMobile(e.matches);
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
@@ -27,8 +31,8 @@ const EarthCanvas = () => {
     <Canvas
       shadows={!isMobile}
       frameloop='always'
-      dpr={[1, 1.5]}
-      gl={{ preserveDrawingBuffer: true, antialias: true }}
+      dpr={isMobile ? 1 : [1, 1.5]}
+      gl={{ antialias: !isMobile, powerPreference: "high-performance" }}
       camera={{
         fov: 45,
         near: 0.1,

@@ -115,25 +115,46 @@ const Ball = ({ imgUrl, isMobile }) =>
     <RasterBall imgUrl={imgUrl} isMobile={isMobile} />
   );
 
+const matchesMobile = () =>
+  typeof window !== "undefined" &&
+  typeof window.matchMedia === "function" &&
+  window.matchMedia("(max-width: 639px)").matches;
+
 const BallCanvas = ({ icon }) => {
-  const [isMobile, setIsMobile] = useState(false);
+  // Initialise synchronously so a WebGL <Canvas> is NEVER mounted on mobile.
+  // Rendering nine separate canvases (one per tech icon) exhausts the limited
+  // number of WebGL contexts mobile browsers allow, which evicts the Hero
+  // canvas and leaves the 3D computer blank. On mobile we show a flat image.
+  const [isMobile, setIsMobile] = useState(matchesMobile);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 639px)");
-    setIsMobile(mediaQuery.matches);
     const handleChange = (e) => setIsMobile(e.matches);
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
+  if (isMobile) {
+    return (
+      <div className='flex h-full w-full items-center justify-center'>
+        <img
+          src={icon}
+          alt='technology'
+          loading='lazy'
+          className='h-3/5 w-3/5 object-contain'
+        />
+      </div>
+    );
+  }
+
   return (
     <Canvas
       frameloop='always'
       dpr={[1, 1.5]}
-      gl={{ preserveDrawingBuffer: true, antialias: true }}
+      gl={{ antialias: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} enableDamping={!isMobile} />
+        <OrbitControls enableZoom={false} enableDamping />
         <Ball imgUrl={icon} isMobile={isMobile} />
       </Suspense>
 

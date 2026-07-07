@@ -6,6 +6,11 @@ import CanvasLoader from "../Loader";
 
 useGLTF.preload("/desktop_pc/scene.gltf");
 
+const matches = (query) =>
+  typeof window !== "undefined" &&
+  typeof window.matchMedia === "function" &&
+  window.matchMedia(query).matches;
+
 const Computers = ({ isMobile, isTablet }) => {
   const computer = useGLTF("/desktop_pc/scene.gltf");
 
@@ -34,24 +39,31 @@ const Computers = ({ isMobile, isTablet }) => {
   );
 };
 
+const ComputersFallback = () => (
+  <div className='!absolute inset-x-0 bottom-10 mx-auto flex h-[320px] w-full items-center justify-center sm:h-full'>
+    <img
+      src='/desktop_fallback.png'
+      alt='3D developer workspace'
+      className='h-full w-full object-contain'
+    />
+  </div>
+);
+
 const ComputersCanvas = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
+  // Detect device synchronously so shadows/scale are correct on the very first
+  // frame and a heavy shadow pass is never run on mobile.
+  const [isMobile, setIsMobile] = useState(() => matches("(max-width: 639px)"));
+  const [isTablet, setIsTablet] = useState(() =>
+    matches("(min-width: 640px) and (max-width: 1024px)")
+  );
+  const [contextLost, setContextLost] = useState(false);
 
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 639px)");
     const tabletQuery = window.matchMedia("(min-width: 640px) and (max-width: 1024px)");
 
-    setIsMobile(mobileQuery.matches);
-    setIsTablet(tabletQuery.matches);
-
-    const handleMobileChange = (event) => {
-      setIsMobile(event.matches);
-    };
-
-    const handleTabletChange = (event) => {
-      setIsTablet(event.matches);
-    };
+    const handleMobileChange = (event) => setIsMobile(event.matches);
+    const handleTabletChange = (event) => setIsTablet(event.matches);
 
     mobileQuery.addEventListener("change", handleMobileChange);
     tabletQuery.addEventListener("change", handleTabletChange);
@@ -62,13 +74,30 @@ const ComputersCanvas = () => {
     };
   }, []);
 
+  // A lost WebGL context (common on low-end mobile GPUs) fires a DOM event, not
+  // a React error, so an ErrorBoundary can't catch it. Handle it here and swap
+  // in a visible static fallback instead of leaving an empty canvas.
+  if (contextLost) {
+    return <ComputersFallback />;
+  }
+
   return (
     <Canvas
-      frameloop='demand'
+      frameloop='always'
       shadows={!isMobile}
-      dpr={[1, 1.5]}
+      dpr={isMobile ? 1 : [1, 1.5]}
       camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
+      gl={{ preserveDrawingBuffer: true, alpha: true, antialias: !isMobile, powerPreference: "high-performance" }}
+      onCreated={({ gl }) => {
+        gl.domElement.addEventListener(
+          "webglcontextlost",
+          (event) => {
+            event.preventDefault();
+            setContextLost(true);
+          },
+          { once: true }
+        );
+      }}
       className='!absolute inset-x-0 bottom-10 mx-auto w-full h-[320px] sm:h-full z-[1]'
     >
       <Suspense fallback={<CanvasLoader />}>

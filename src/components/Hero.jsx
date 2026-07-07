@@ -1,12 +1,17 @@
+import { Suspense, lazy } from "react";
 import { motion } from "framer-motion";
 
 import { styles } from "../styles";
-import { ComputersCanvas } from "./canvas";
 import ErrorBoundary from "./ErrorBoundary";
+
+const ComputersCanvas = lazy(() => import("./canvas/Computers"));
 
 const Hero = () => {
   return (
     <section className={`relative w-full h-screen mx-auto overflow-hidden`}>
+      {/* Gradient scrim: guarantees a dark, legible backdrop behind the text
+          even before the 3D scene or hero image has loaded. */}
+      <div className='absolute inset-0 z-[5] pointer-events-none bg-gradient-to-b from-primary/60 via-transparent to-primary/30' />
       <div
         className={`absolute inset-0 top-[80px] sm:top-[120px] max-w-7xl mx-auto ${styles.paddingX} flex flex-col sm:flex-row items-center sm:items-start gap-5 z-20 pointer-events-none`}
       >
@@ -33,7 +38,7 @@ const Hero = () => {
             <h1 className='font-black text-white text-[32px] xs:text-[40px] sm:text-[56px] md:text-[72px] lg:text-[80px] leading-[1.2] lg:leading-[98px] mt-2'>
               Hi, I'm <span className='text-[#915EFF]'>Siddharth Semwal</span>
             </h1>
-            <p className='text-[#dfd9ff] font-medium text-[15px] xs:text-[16px] sm:text-[20px] md:text-[24px] lg:text-[30px] leading-[1.4] lg:leading-[40px] mt-2 text-white-100'>
+            <p className='text-[#dfd9ff] font-medium text-[15px] xs:text-[16px] sm:text-[20px] md:text-[24px] lg:text-[30px] leading-[1.4] lg:leading-[40px] mt-2'>
               B.Tech CSE Student | Aspiring Software Developer{" "}
               <br className='sm:block hidden' />
               based in Uttarakhand, India
@@ -43,10 +48,12 @@ const Hero = () => {
       </div>
 
       <ErrorBoundary>
-        <ComputersCanvas />
+        <Suspense fallback={null}>
+          <ComputersCanvas />
+        </Suspense>
       </ErrorBoundary>
 
-      <div className='absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center z-20 pointer-events-auto'>
+      <div className='absolute bottom-4 xs:bottom-10 w-full flex justify-center items-center z-20 pointer-events-auto'>
         <a href='#about'>
           <div className='w-[35px] h-[64px] rounded-3xl border-4 border-secondary flex justify-center items-start p-2'>
             <motion.div
