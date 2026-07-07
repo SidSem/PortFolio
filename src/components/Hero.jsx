@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 
 import { styles } from "../styles";
 import { ComputersCanvas } from "./canvas";
+import ErrorBoundary from "./ErrorBoundary";
 
 const Hero = () => {
   return (
@@ -41,7 +42,9 @@ const Hero = () => {
         </div>
       </div>
 
-      <ComputersCanvas />
+      <ErrorBoundary>
+        <ComputersCanvas />
+      </ErrorBoundary>
 
       <div className='absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center z-20 pointer-events-auto'>
         <a href='#about'>
